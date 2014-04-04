@@ -14,7 +14,7 @@ public class CalendarModel {
     ArrayList<Event> events = new ArrayList<>();
     
     public void addEvent(Event e) {
-        
+        events.add(e);
     }
     
     public ArrayList<Event> getData() {

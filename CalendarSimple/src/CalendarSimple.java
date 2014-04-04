@@ -1,5 +1,6 @@
 
 import java.io.Console;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -29,7 +30,15 @@ public class CalendarSimple {
         
         Event event = new Event("Going to work", date, start_time, end_time);
         
+        Date date1 = new Date(12,31,2014);
+        Time start_time1 = new Time(16,20);
+        Time end_time1 = new Time(20,00);
         
-        System.out.println(event);
+        Event event1 = new Event("Going to School", date1, start_time1, end_time1);
+        
+        data.addEvent(event);
+        data.addEvent(event1);
+        ArrayList<Event> ar = data.getData();
+        System.out.println(ar);
     }
 }
