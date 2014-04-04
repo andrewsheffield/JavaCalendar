@@ -23,12 +23,13 @@ public class CalendarSimple {
         
         Calendar calendar = new GregorianCalendar();
         
-        System.out.print(calendar.get(Calendar.MONTH) + "/");
-        System.out.print(calendar.get(Calendar.DAY_OF_MONTH) + "/");
-        System.out.println(calendar.get(Calendar.YEAR) + "");
+        Date date = new Date(12,31,1984);
+        Time start_time = new Time(14,30);
+        Time end_time = new Time(23,59);
         
-        Date date = new Date();
+        Event event = new Event("Going to work", date, start_time, end_time);
         
         
+        System.out.println(event);
     }
 }
