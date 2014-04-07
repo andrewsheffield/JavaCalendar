@@ -11,20 +11,25 @@ import java.util.Date;
 public class CalendarModel {
     
     public CalendarModel() {
-        Calendar cal =  new GregorianCalendar(2014, 0, 1);
+        drawCal(1, 2014);
+    }
+    
+    public void drawCal(int month, int year) {
+        Calendar cal =  new GregorianCalendar(year, month, 1);
         
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         int startDay = cal.get(Calendar.DAY_OF_WEEK);
-        Date month = cal.getTime();
+        Date monthDate = cal.getTime();
         
-        System.out.println(new SimpleDateFormat("MMM").format(month));
+        System.out.println(new SimpleDateFormat("MMM").format(monthDate));
         System.out.print("sun\tmon\ttue\twed\tthu\tfri\tsat\n");
         
         for (int i = 1; i<daysInMonth+startDay; i++) {
             if (i<startDay) {
                 System.out.print("\t");
             } else {
-                System.out.print(i-startDay+1 + "\t");
+                int day = i-startDay +1;
+                System.out.print(day + "\t");
             }
             if (i%7 == 0) {
                 System.out.print("\n");
@@ -32,5 +37,7 @@ public class CalendarModel {
         }
         System.out.print("\n");
     }
+    
+    
 
 }

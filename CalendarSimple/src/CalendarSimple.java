@@ -21,5 +21,6 @@ public class CalendarSimple {
      */
     public static void main(String[] args) {
         CalendarModel cm = new CalendarModel();
+        MainView mv = new MainView();
     }
 }
