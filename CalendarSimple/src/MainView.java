@@ -3,12 +3,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import javax.swing.BoxLayout;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 /*
@@ -25,6 +26,10 @@ public class MainView {
     public MainView() {
         JFrame frame = new JFrame();
         
+        Calendar cal =  new GregorianCalendar(2014, 11, 1);
+        
+        java.util.Date monthDate = cal.getTime();
+        
         
         JButton createButton = new JButton("Create");
         JButton previousButton = new JButton("<");
@@ -33,7 +38,7 @@ public class MainView {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(createButton);
         buttonPanel.add(previousButton);
-        buttonPanel.add(new JLabel("April 2014"));
+        buttonPanel.add(new JLabel(new SimpleDateFormat("MMM").format(monthDate) + " 2014"));
         buttonPanel.add(nextButton);
         
         JPanel monthPanel = new JPanel();
@@ -48,13 +53,23 @@ public class MainView {
         }
         
         //Add days in month
-        for (int i=1; i<32; i++) {
-            JLabel day = new JLabel(i+"");
-            if (i==3) {
-                day.setFont(new Font("Serif", Font.BOLD, 14));
-                day.setForeground(Color.red);
+        
+        
+        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int startDay = cal.get(Calendar.DAY_OF_WEEK);
+        
+        
+        System.out.println(new SimpleDateFormat("MMM").format(monthDate));
+        
+        for (int i = 1; i<daysInMonth+startDay; i++) {
+            if (i<startDay) {
+                JLabel day = new JLabel("");
+                monthPanel.add(day);
+            } else {
+                int dayNumber = i-startDay +1;
+                JLabel day = new JLabel(dayNumber+"");
+                monthPanel.add(day);
             }
-            monthPanel.add(day);
         }
         
         
