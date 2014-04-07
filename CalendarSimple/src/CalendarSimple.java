@@ -20,7 +20,9 @@ public class CalendarSimple {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        CalendarModel cm = new CalendarModel();
-        MainView mv = new MainView();
+
+        EventModel model = new EventModel(2, 2014);
+        MainView mv = new MainView(model);
+        model.setView(mv);
     }
 }
