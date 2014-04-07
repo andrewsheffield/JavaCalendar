@@ -1,5 +1,7 @@
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /*
  * To change this template, choose Tools | Templates
@@ -10,33 +12,67 @@ import java.util.ArrayList;
  *
  * @author sheff
  */
-public class EventModel {
-    ArrayList<Event> events = new ArrayList<>();
-    int currentMonth;
-    int currentYear;
+public final class EventModel {
+    private ArrayList<Event> events = new ArrayList<>();
+    private int currentMonth;
+    private int currentYear;
+    private int currentDay;
+    private Calendar cal;
+    private int daysInMonth;
     private MainView view;
     
-    public EventModel(int initMonth, int initYear) {
+    public EventModel(int initYear, int initMonth, int initDay) {
         this.currentMonth = initMonth;
         this.currentYear = initYear;
+        this.currentDay = initDay;
+        cal = new GregorianCalendar(initYear, initMonth, initDay);
+        this.setDaysInMonth();
     }
     
-    public void previousMonth() {
-        currentMonth -= 1;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear -= 1;
+    public Calendar getCal() {
+        return cal;
+    }
+    
+    public void setDaysInMonth() {
+        daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+    
+    public int getDaysInMonth() {
+        return daysInMonth;
+    }
+    
+    public void previousDay() {
+        currentDay -= 1;
+        if (currentDay < 1) {
+            currentMonth -= 1;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear -= 1;
+            }
+            cal.set(currentYear, currentMonth, 1);
+            setDaysInMonth();
+            currentDay = getDaysInMonth();
         }
         view.repaint();
     }
     
-    public void nextMonth() {
-        currentMonth += 1;
-        if (currentMonth >= 12) {
-            currentMonth = 0;
-            currentYear += 1;
+    public void nextDay() {
+        currentDay += 1;
+        if (currentDay > daysInMonth) {
+            currentDay = 1;
+            currentMonth += 1;
+            if (currentMonth > 11) {
+                currentYear += 1;
+                currentMonth = 0;
+            }
+            cal.set(currentYear, currentMonth, 1);
+            this.setDaysInMonth();
         }
         view.repaint();
+    }
+    
+    public int getDay() {
+        return currentDay;
     }
     
     public int getMonth() {

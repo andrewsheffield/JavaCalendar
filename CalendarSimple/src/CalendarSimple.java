@@ -21,7 +21,7 @@ public class CalendarSimple {
      */
     public static void main(String[] args) {
 
-        EventModel model = new EventModel(2, 2014);
+        EventModel model = new EventModel(2014, 3, 8);
         MainView mv = new MainView(model);
         model.setView(mv);
     }

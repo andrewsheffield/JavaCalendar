@@ -1,6 +1,7 @@
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+import javax.swing.plaf.BorderUIResource;
 
 /*
  * To change this template, choose Tools | Templates
@@ -28,7 +32,6 @@ public class MainView {
     
     final EventModel model;
     final JLabel monthLabel;
-    final Calendar cal;
     final JPanel monthPanel;
     
     public MainView(final EventModel model) {
@@ -36,7 +39,7 @@ public class MainView {
         
         JFrame frame = new JFrame();
         
-        cal =  new GregorianCalendar(model.getYear(), model.getMonth(), 1);
+        Calendar cal =  model.getCal();
         
         Date monthDate = cal.getTime();
         
@@ -45,11 +48,19 @@ public class MainView {
         JButton previousButton = new JButton("<");
         JButton nextButton = new JButton(">");
         
+        createButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CreateEventView cev = new CreateEventView();
+            }
+        });
+        
         previousButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.previousMonth();
+                model.previousDay();
             }
         });
         
@@ -57,7 +68,7 @@ public class MainView {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.nextMonth();
+                model.nextDay();
             }
         });
         
@@ -74,9 +85,14 @@ public class MainView {
         
         drawMonth(monthPanel);
         
+        JPanel dayPanel = new JPanel();
+        dayPanel.setLayout(new FlowLayout());
+        dayPanel.setSize(400, 400);
+        drawDay(dayPanel);
         
         frame.add(buttonPanel, BorderLayout.NORTH);
         frame.add(monthPanel, BorderLayout.WEST);
+        frame.add(dayPanel, BorderLayout.EAST);
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -84,13 +100,14 @@ public class MainView {
     }
     
     public void repaint() {
-        cal.set(model.getYear(), model.getMonth(), 1);
+        Calendar cal = model.getCal();
         Date monthDate = cal.getTime();
         monthLabel.setText(new SimpleDateFormat("MMM").format(monthDate) + " " + model.getYear());
         monthLabel.repaint();
         
         monthPanel.removeAll();
         drawMonth(monthPanel);
+        monthPanel.revalidate();
         monthPanel.repaint();
     }
 
@@ -103,19 +120,28 @@ public class MainView {
         }
         
         //Add days in month
-        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int startDay = cal.get(Calendar.DAY_OF_WEEK);
+        int daysInMonth = model.getDaysInMonth();
+        int startDay = model.getCal().get(Calendar.DAY_OF_WEEK);
         
         for (int i = 1; i<daysInMonth+startDay; i++) {
             if (i<startDay) {
                 JLabel day = new JLabel("");
                 monthPanel.add(day);
             } else {
-                int dayNumber = i-startDay +1;
+                int dayNumber = i-startDay+1;
                 JLabel day = new JLabel(dayNumber+"");
+                if (dayNumber == model.getDay()) {
+                    day.setBorder(BorderFactory.createLineBorder(Color.blue));
+                }
                 monthPanel.add(day);
             }
         }
+    }
+    
+    public void drawDay(JPanel dayPanel) {
+        JLabel dayLabel = new JLabel("Today Bitches!");
+        dayLabel.setSize(900, 900);
+        dayPanel.add(dayLabel);
     }
 
 }
