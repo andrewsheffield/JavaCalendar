@@ -1,12 +1,16 @@
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.JButton;
@@ -16,8 +20,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.util.Date;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.DimensionUIResource;
 
 /*
  * To change this template, choose Tools | Templates
@@ -31,17 +39,14 @@ import javax.swing.plaf.BorderUIResource;
 public class MainView {
     
     final EventModel model;
-    final JLabel monthLabel;
+    final JLabel monthLabel = new JLabel();
     final JPanel monthPanel;
+    final JPanel dayPanel;
     
     public MainView(final EventModel model) {
         this.model = model;
         
         JFrame frame = new JFrame();
-        
-        Calendar cal =  model.getCal();
-        
-        Date monthDate = cal.getTime();
         
         
         JButton createButton = new JButton("Create");
@@ -75,43 +80,53 @@ public class MainView {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(createButton);
         buttonPanel.add(previousButton);
-        monthLabel = new JLabel(new SimpleDateFormat("MMM").format(monthDate) + " 2014");
-        buttonPanel.add(monthLabel);
         buttonPanel.add(nextButton);
         
         monthPanel = new JPanel();
         monthPanel.setLayout(new GridLayout(0, 7, 5, 5));
         monthPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
         
+        JPanel monthWrap = new JPanel();
+        monthWrap.setLayout(new FlowLayout());
+        monthWrap.add(monthLabel);
+        monthWrap.add(monthPanel);
+        
         drawMonth(monthPanel);
         
-        JPanel dayPanel = new JPanel();
-        dayPanel.setLayout(new FlowLayout());
-        dayPanel.setSize(400, 400);
+        dayPanel = new JPanel();
+        dayPanel.setLayout(new BoxLayout(dayPanel, BoxLayout.PAGE_AXIS));
+        dayPanel.setPreferredSize(new Dimension(400, 400));
+        dayPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         drawDay(dayPanel);
-        
+       
         frame.add(buttonPanel, BorderLayout.NORTH);
-        frame.add(monthPanel, BorderLayout.WEST);
+        frame.add(monthWrap, BorderLayout.WEST);
         frame.add(dayPanel, BorderLayout.EAST);
-        
+
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
     
     public void repaint() {
-        Calendar cal = model.getCal();
-        Date monthDate = cal.getTime();
-        monthLabel.setText(new SimpleDateFormat("MMM").format(monthDate) + " " + model.getYear());
-        monthLabel.repaint();
-        
+
         monthPanel.removeAll();
         drawMonth(monthPanel);
         monthPanel.revalidate();
         monthPanel.repaint();
+        
+        dayPanel.removeAll();
+        drawDay(dayPanel);
+        dayPanel.revalidate();
+        dayPanel.repaint();
     }
 
     private void drawMonth(JPanel monthPanel) {
+        
+        Date monthDate = model.getCal().getTime();
+        monthLabel.setText(new SimpleDateFormat("MMM").format(monthDate) + " " + model.getYear());
+        
         //Add Week Labels at top of Month View
         String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         for (int i = 0; i<7; i++) {
@@ -125,11 +140,32 @@ public class MainView {
         
         for (int i = 1; i<daysInMonth+startDay; i++) {
             if (i<startDay) {
-                JLabel day = new JLabel("");
+                final JLabel day = new JLabel("");
+                
                 monthPanel.add(day);
             } else {
                 int dayNumber = i-startDay+1;
-                JLabel day = new JLabel(dayNumber+"");
+                final JLabel day = new JLabel(dayNumber+"");
+                day.addMouseListener(new MouseListener() {
+
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        int num = Integer.parseInt(day.getText());
+                        model.setDay(num);
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {}
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {}
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {}
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {}
+                });
                 if (dayNumber == model.getDay()) {
                     day.setBorder(BorderFactory.createLineBorder(Color.blue));
                 }
@@ -139,9 +175,12 @@ public class MainView {
     }
     
     public void drawDay(JPanel dayPanel) {
-        JLabel dayLabel = new JLabel("Today Bitches!");
-        dayLabel.setSize(900, 900);
-        dayPanel.add(dayLabel);
+        
+        ArrayList<Event> todaysEvents = model.getTodaysEvents();
+        
+        for (Event e : todaysEvents) {
+            dayPanel.add(new JLabel(e.name + " " + e.date + " " + e.start_time + " " + e.end_time));
+        }
     }
 
 }

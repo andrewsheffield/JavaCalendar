@@ -29,6 +29,11 @@ public final class EventModel {
         this.setDaysInMonth();
     }
     
+    public void setDay(int day) {
+        currentDay=day;
+        view.repaint();
+    }
+    
     public Calendar getCal() {
         return cal;
     }
@@ -84,11 +89,28 @@ public final class EventModel {
     }
     
     public void addEvent(Event e) {
+        
+        Calendar cal1 = new GregorianCalendar(2014, 3, 8, 10, 30);
+        Calendar cal2 = new GregorianCalendar(2014, 3, 8, 9, 30);
+        
+        if (cal1.after(cal2)) {
+            System.out.println("test");
+        }
+        
         events.add(e);
     }
     
-    public ArrayList<Event> getData() {
-        return events;
+    public ArrayList<Event> getTodaysEvents() {
+        ArrayList<Event> todaysEvents = new ArrayList<>();
+        
+        for (Event e: events) {
+            if (e.date.getYear() == currentYear
+                    && e.date.getMonth() == currentMonth
+                    && e.date.getDay() == currentDay) {
+                todaysEvents.add(e);
+            }
+        }
+        return todaysEvents;
     }
 
     void setView(MainView mv) {
