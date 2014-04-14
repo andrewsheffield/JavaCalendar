@@ -23,11 +23,7 @@ public class CalendarSimple {
         
         EventModel model = new EventModel();
         MainView mv = new MainView(model);
-        model.setView(mv);
-        
-        model.addEvent(new Event("Hello", new GregorianCalendar(2014, 3, 13, 7, 0), new GregorianCalendar(2014, 3, 13, 7, 30)));
-        model.addEvent(new Event("Hello", new GregorianCalendar(2014, 3, 13, 9, 0), new GregorianCalendar(2014, 3, 13, 9, 30)));
-        
+        model.setView(mv);    
         
     }
 }

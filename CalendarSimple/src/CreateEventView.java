@@ -1,7 +1,12 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,10 +21,12 @@ public class CreateEventView {
     public CreateEventView(final EventModel model) {
         final JFrame frame = new JFrame();
         
-        final JTextField descField = new JTextField("Descrition here");
-        final JTextField dateField = new JTextField("10/02/2012");
-        final JTextField startField = new JTextField("10:30");
-        final JTextField endField = new JTextField("11:30");
+        Calendar cal = model.getCal();
+        
+        final JTextField descField = new JTextField("Description here");
+        final JTextField dateField = new JTextField((cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
+        final JTextField startField = new JTextField("10:30am");
+        final JTextField endField = new JTextField("11:30am");
         JButton saveButton = new JButton("Save");
         
         saveButton.addActionListener(new ActionListener() {
@@ -31,22 +38,25 @@ public class CreateEventView {
                 String start = startField.getText();
                 String end = endField.getText();
                 
-                String dateArr[] = date.split("/");
-                String startTimeArr[] = start.split(":");
-                String endTimeArr[] = end.split(":");
+                SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyyhh:mmaa");
                 
-                int year = Integer.parseInt(dateArr[2]);
-                int month = Integer.parseInt(dateArr[0]);
-                int day = Integer.parseInt(dateArr[1]);
+                Date startDate = null;
+                try {
+                    startDate = sf.parse(date+start);
+                } catch (ParseException ex) {
+                    Logger.getLogger(CreateEventView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Date endDate = null;
+                try {
+                    endDate = sf.parse(date+end);
+                } catch (ParseException ex) {
+                    Logger.getLogger(CreateEventView.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 
-                int startHour = Integer.parseInt(startTimeArr[0]);
-                int startMinute = Integer.parseInt(startTimeArr[1]);
-                
-                int endHour = Integer.parseInt(endTimeArr[0]);
-                int endMinute = Integer.parseInt(endTimeArr[0]);
-                
-                Calendar startCal = new GregorianCalendar(year, month, day, startHour, startMinute);
-                Calendar endCal = new GregorianCalendar(year, month, day, endHour, endMinute);
+                Calendar startCal = new GregorianCalendar();
+                startCal.setTime(startDate);
+                Calendar endCal = new GregorianCalendar();
+                endCal.setTime(endDate);
                 
                 Event newEvent = new Event(name, (GregorianCalendar)startCal, (GregorianCalendar) endCal);
                 

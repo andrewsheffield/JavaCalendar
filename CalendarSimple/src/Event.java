@@ -23,7 +23,7 @@ class Event {
         this.end = end;
         
         if (start.after(end)) {
-            throw new IllegalArgumentException("Start time cannot come after end time");
+            //throw new IllegalArgumentException("Start time cannot come after end time");
         }
     }
     

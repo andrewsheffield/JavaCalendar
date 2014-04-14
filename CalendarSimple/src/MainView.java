@@ -3,7 +3,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,20 +11,15 @@ import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
-import javax.swing.JScrollPane;
-import javax.swing.border.Border;
-import javax.swing.plaf.BorderUIResource;
-import javax.swing.plaf.DimensionUIResource;
 
 /*
  * To change this template, choose Tools | Templates
@@ -121,7 +115,7 @@ public class MainView {
         
         Calendar cal = model.getCal();
         
-        monthLabel.setText(cal.get(Calendar.MONTH) + "");
+        monthLabel.setText(new SimpleDateFormat("MMM").format(cal.getTime()));
         
         //Add Week Labels at top of Month View
         String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -179,7 +173,13 @@ public class MainView {
         
         for (Event e : todaysEvents) {
             if (e.start.get(Calendar.DAY_OF_MONTH) == cal.get(Calendar.DAY_OF_MONTH)) {
+                
+                Date startDate = e.start.getTime();
+                Date endDate = e.end.getTime();
+                
                 dayPanel.add(new JLabel(e.name));
+                dayPanel.add(new JLabel(new SimpleDateFormat("hh:mmaa").format(startDate)));
+                dayPanel.add(new JLabel(new SimpleDateFormat("hh:mmaa").format(endDate)));
             }
         }
     }
