@@ -38,16 +38,8 @@ import javax.swing.plaf.DimensionUIResource;
  */
 public class MainView {
     
-    final EventModel model;
-    final JLabel monthLabel = new JLabel();
-    final JPanel monthPanel;
-    final JPanel dayPanel;
-    
     public MainView(final EventModel model) {
         this.model = model;
-        
-        JFrame frame = new JFrame();
-        
         
         JButton createButton = new JButton("Create");
         JButton previousButton = new JButton("<");
@@ -57,7 +49,7 @@ public class MainView {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                CreateEventView cev = new CreateEventView();
+                CreateEventView cev = new CreateEventView(model);
             }
         });
         
@@ -86,6 +78,8 @@ public class MainView {
         monthPanel.setLayout(new GridLayout(0, 7, 5, 5));
         monthPanel.setBorder(new EmptyBorder(0, 10, 0, 0));
         
+        monthLabel = new JLabel("Hello");
+        
         JPanel monthWrap = new JPanel();
         monthWrap.setLayout(new FlowLayout());
         monthWrap.add(monthLabel);
@@ -99,6 +93,7 @@ public class MainView {
         dayPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         drawDay(dayPanel);
        
+        JFrame frame = new JFrame();
         frame.add(buttonPanel, BorderLayout.NORTH);
         frame.add(monthWrap, BorderLayout.WEST);
         frame.add(dayPanel, BorderLayout.EAST);
@@ -124,8 +119,9 @@ public class MainView {
 
     private void drawMonth(JPanel monthPanel) {
         
-        Date monthDate = model.getCal().getTime();
-        monthLabel.setText(new SimpleDateFormat("MMM").format(monthDate) + " " + model.getYear());
+        Calendar cal = model.getCal();
+        
+        monthLabel.setText(cal.get(Calendar.MONTH) + "");
         
         //Add Week Labels at top of Month View
         String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -135,8 +131,10 @@ public class MainView {
         }
         
         //Add days in month
-        int daysInMonth = model.getDaysInMonth();
-        int startDay = model.getCal().get(Calendar.DAY_OF_WEEK);
+        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        
+        Calendar getStart = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1);
+        int startDay = getStart.get(Calendar.DAY_OF_WEEK);
         
         for (int i = 1; i<daysInMonth+startDay; i++) {
             if (i<startDay) {
@@ -166,7 +164,7 @@ public class MainView {
                     @Override
                     public void mouseExited(MouseEvent e) {}
                 });
-                if (dayNumber == model.getDay()) {
+                if (dayNumber == cal.get(Calendar.DAY_OF_MONTH)) {
                     day.setBorder(BorderFactory.createLineBorder(Color.blue));
                 }
                 monthPanel.add(day);
@@ -176,11 +174,21 @@ public class MainView {
     
     public void drawDay(JPanel dayPanel) {
         
-        ArrayList<Event> todaysEvents = model.getTodaysEvents();
+        ArrayList<Event> todaysEvents = model.getEvents();
+        Calendar cal = model.getCal();
         
         for (Event e : todaysEvents) {
-            dayPanel.add(new JLabel(e.name + " " + e.date + " " + e.start_time + " " + e.end_time));
+            if (e.start.get(Calendar.DAY_OF_MONTH) == cal.get(Calendar.DAY_OF_MONTH)) {
+                dayPanel.add(new JLabel(e.name));
+            }
         }
     }
+
+    
+    private EventModel model;
+    private final JLabel monthLabel;
+    private final JLabel dayLabel = new JLabel();
+    private final JPanel monthPanel;
+    private final JPanel dayPanel;
 
 }

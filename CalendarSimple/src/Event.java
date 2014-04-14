@@ -1,3 +1,7 @@
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -9,26 +13,22 @@
  */
 class Event {
     String name;
-    Date date;
-    Time start_time;
-    Time end_time;
+    Calendar start;
+    Calendar end;
     
     
-    public Event(String name, Date date, Time start_time, Time end_time) throws IllegalArgumentException {
+    public Event(String name, GregorianCalendar start, GregorianCalendar end) throws IllegalArgumentException {
         this.name = name;
-        this.date = date;
-        this.start_time = start_time;
-        this.end_time = end_time;
+        this.start = start;
+        this.end = end;
         
-        if (start_time.getHour() > end_time.getHour()
-                || start_time.getHour() == end_time.getHour() && start_time.getMinute() > end_time.getMinute()
-                ) {
+        if (start.after(end)) {
             throw new IllegalArgumentException("Start time cannot come after end time");
         }
     }
     
     @Override
     public String toString() {
-        return "Name: " + name + "\nDate: " + date + "\nStart: " + start_time + "\nEnd: " + end_time;
+        return start.toString() + end.toString();
     }
 }
