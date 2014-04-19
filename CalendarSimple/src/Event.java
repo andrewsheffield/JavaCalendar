@@ -1,14 +1,8 @@
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
+ * Object type Event hold a name, Calendar start and end times.
  * @author sheff
  */
 class Event implements Comparable<Event> {
@@ -21,10 +15,6 @@ class Event implements Comparable<Event> {
         this.name = name;
         this.start = start;
         this.end = end;
-        
-        if (start.after(end)) {
-            //throw new IllegalArgumentException("Start time cannot come after end time");
-        }
     }
     
     @Override

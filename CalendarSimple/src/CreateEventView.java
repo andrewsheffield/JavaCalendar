@@ -14,7 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- *
+ * CreateEventView creates a new window to create events and add them to the
+ * data model.
  * @author sheff
  */
 public class CreateEventView {
@@ -46,6 +47,7 @@ public class CreateEventView {
             }
         });
         
+        //CONTROLLER gets the from the fields and updates the model with a new Event.
         saveButton.addActionListener(new ActionListener() {
 
             @Override

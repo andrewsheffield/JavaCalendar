@@ -3,13 +3,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
+ * Data model used to hold an Arraylist of Events, Calendar of selected day.
  * @author sheff
  */
 public final class EventModel {
