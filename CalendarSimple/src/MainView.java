@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneLayout;
 
 /*
  * To change this template, choose Tools | Templates
@@ -75,22 +77,27 @@ public class MainView {
         monthLabel = new JLabel("Hello");
         
         JPanel monthWrap = new JPanel();
-        monthWrap.setLayout(new FlowLayout());
+        monthWrap.setLayout(new BoxLayout(monthWrap, BoxLayout.Y_AXIS));
         monthWrap.add(monthLabel);
         monthWrap.add(monthPanel);
         
         drawMonth(monthPanel);
         
+        JScrollPane scroll = new JScrollPane();
+        
         dayPanel = new JPanel();
         dayPanel.setLayout(new BoxLayout(dayPanel, BoxLayout.PAGE_AXIS));
-        dayPanel.setPreferredSize(new Dimension(400, 400));
         dayPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         drawDay(dayPanel);
+        
+        scroll.getViewport().add(dayPanel);
+        scroll.setPreferredSize(new Dimension(200, 200));
+        scroll.setVerticalScrollBarPolicy(ScrollPaneLayout.VERTICAL_SCROLLBAR_ALWAYS);
        
         JFrame frame = new JFrame();
         frame.add(buttonPanel, BorderLayout.NORTH);
         frame.add(monthWrap, BorderLayout.WEST);
-        frame.add(dayPanel, BorderLayout.EAST);
+        frame.add(scroll, BorderLayout.EAST);
 
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -115,7 +122,7 @@ public class MainView {
         
         Calendar cal = model.getCal();
         
-        monthLabel.setText(new SimpleDateFormat("MMM").format(cal.getTime()));
+        monthLabel.setText(new SimpleDateFormat("MMM yyyy").format(cal.getTime()));
         
         //Add Week Labels at top of Month View
         String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -177,9 +184,11 @@ public class MainView {
                 Date startDate = e.start.getTime();
                 Date endDate = e.end.getTime();
                 
+                SimpleDateFormat sf = new SimpleDateFormat("hh:mm aa");
+                
                 dayPanel.add(new JLabel(e.name));
-                dayPanel.add(new JLabel(new SimpleDateFormat("hh:mmaa").format(startDate)));
-                dayPanel.add(new JLabel(new SimpleDateFormat("hh:mmaa").format(endDate)));
+                dayPanel.add(new JLabel(sf.format(startDate)));
+                dayPanel.add(new JLabel(sf.format(endDate)));
             }
         }
     }

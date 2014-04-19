@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 
 /*
@@ -44,6 +45,7 @@ public final class EventModel {
     
     public void addEvent(Event e) {
         events.add(e);
+        Collections.sort(events);
         view.repaint();
     }
     

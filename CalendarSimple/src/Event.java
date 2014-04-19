@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
  *
  * @author sheff
  */
-class Event {
+class Event implements Comparable<Event> {
     String name;
     Calendar start;
     Calendar end;
@@ -31,4 +31,18 @@ class Event {
     public String toString() {
         return start.toString() + end.toString();
     }
+
+    @Override
+    public int compareTo(Event newEvent) {
+        if (newEvent.start.before(this.start) && newEvent.end.before(this.start)) {
+            return 1;
+        }
+        else if (newEvent.start.after(this.end) && newEvent.end.after(this.end)) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
+
 }
